@@ -14,7 +14,7 @@ function ScheduleItem({event_start, event_end, event_name, attendees, event_owne
   if (!modal_active) {
     return (
     <div>
-      <table>
+      <table class="table table-dark"> 
         <tbody>
           <tr>
             <td>What:</td><td>{event_name}</td>
@@ -26,16 +26,18 @@ function ScheduleItem({event_start, event_end, event_name, attendees, event_owne
             <td>End Time:</td><td>{event_end}</td>
           </tr>
           <tr>
-            <td>Attendees:</td>{attendees.map(attendee => {
-              return (<td key={attendee}>{attendee}</td>)
-            })}
+            <td>Attendees:</td><td>{attendees.map(attendee => {
+              return (<span key={attendee}>{attendee},&nbsp;</span>)
+            })}</td>
           </tr>
           <tr>
             <td>Organizer:</td><td>{event_owner}</td>
           </tr>
+          <input type="button" value="Details" onClick={handleModalShow} />
         </tbody>
       </table>
-      <input type="button" value="Details" onClick={handleModalShow} />
+      <div><br></br></div>
+      
     </div>
   )}
   else {
