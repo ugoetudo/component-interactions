@@ -1,5 +1,5 @@
 
-events = [
+const events = [
     {
         event_date: "11/11/2024",
         event_start: "9:00 AM",
@@ -29,4 +29,4 @@ events = [
     }
 ]
 
-module.exports(events)
+module.exports = events;

@@ -6,38 +6,42 @@ import Modal from 'react-bootstrap/Modal'
 
 function ScheduleItem({event_start, event_end, event_name, attendees, event_owner, desc}) {
   
-  cosnt [modal_active, setActivateModal] = setState(False);
+  const [modal_active, setActivateModal] = useState(false);
 
-  const handleModalShow = () => setActivateModal(True);
-  const handleModalClose = () => setActivateModal(False);
+  const handleModalShow = () => setActivateModal(true);
+  const handleModalClose = () => setActivateModal(false);
 
   if (!modal_active) {
     return (
     <div>
-      <tr>
-        <td>What:</td> <td>{event_name}</td>
-      </tr>
-      <tr>
-        <td>Start Time:</td><td>{event_start}</td>
-      </tr>
-      <tr>
-        <td>End Time:</td><td>{event_end}</td>
-      </tr>
-      <tr>
-        <td>Attendees:</td>{attendees.map(attendee => {<td>{attendee}</td>})}
-      </tr>
-      <tr>
-        <td>Organizer:</td><td>{event_owner}</td>
-      </tr>
-      <tr>
-        <input type="button" value="Details" onClick={handleModalShow} />
-      </tr>
+      <table>
+        <tbody>
+          <tr>
+            <td>What:</td><td>{event_name}</td>
+          </tr>
+          <tr>
+            <td>Start Time:</td><td>{event_start}</td>
+          </tr>
+          <tr>
+            <td>End Time:</td><td>{event_end}</td>
+          </tr>
+          <tr>
+            <td>Attendees:</td>{attendees.map(attendee => {
+              return (<td key={attendee}>{attendee}</td>)
+            })}
+          </tr>
+          <tr>
+            <td>Organizer:</td><td>{event_owner}</td>
+          </tr>
+        </tbody>
+      </table>
+      <input type="button" value="Details" onClick={handleModalShow} />
     </div>
   )}
   else {
     return (
       <Modal show={modal_active} onHide={handleModalClose}>
-        <Modal.Header closeButton>
+        <Modal.Header >
           <Modal.Title>Meeting Description</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -59,11 +63,14 @@ function Schedule ({show_day, oncloseclick}) {
 
   return (
     <div>
-      <input type="button" value="Go Back" onClick={oncloseclick} />
+      <input type="button" value="Go Back" onClick={oncloseclick()} />
       {
+        
         events.map(ee => {
           if (checkDate(ee)) {
+            return(
             <ScheduleItem 
+              key={ee.event_date+ee.event_start}
               event_start={ee.event_start}
               event_end={ee.event_end}  
               event_name={ee.event_name}
@@ -71,6 +78,10 @@ function Schedule ({show_day, oncloseclick}) {
               event_owner={ee.event_owner}
               desc={ee.desc}
             />
+            )
+          }
+          else {
+            return (null)
           }
         })
       }
@@ -79,35 +90,38 @@ function Schedule ({show_day, oncloseclick}) {
 }
 
 function App() {
-  const [showSched, setShowSched] = useState(False);
+  const [showSched, setShowSched] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
 
   function selectDate (e) {
     setSelectedDate(e.target.value);
-    setShowSched(True);
+    console.log(selectedDate)
+    setShowSched(true);
   }
 
   function closeSched () {
-    setShowSched(False);
+    setShowSched(false);
   }
 
   if (!showSched) {
     return (
     <div className="App">
-      <label for="days">Choose a date:</label>
-      <select name="days">
-        <option value="11/11/2024" onSelect={selectDate}>11/11/2024</option>
-        <option value="11/12/2024" onSelect={selectDate}>11/12/2024</option>
-        <option value="11/13/2024" onSelect={selectDate}>11/13/2024</option>
+      <label>Choose a date:&nbsp;
+      <select name="days" defaultValue="choose a day" onChange={(e) => selectDate(e)}>
+        <option value="choose a day">Dates</option>
+        <option value="11/11/2024" >11/11/2024</option>
+        <option value="11/12/2024" >11/12/2024</option>
+        <option value="11/13/2024" >11/13/2024</option>
       </select>
+      </label>
     </div>
   )}
    else {
     return (
     <div className="App">
-      <Schedule show_day={selectedDate} oncloseclick={() => {closeSched}}/>
+      <Schedule show_day={selectedDate} oncloseclick={() => closeSched}/>
     </div>
-  )};
+  )}
 }
 
 export default App;
